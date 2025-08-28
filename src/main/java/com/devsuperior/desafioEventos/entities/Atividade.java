@@ -1,31 +1,45 @@
 package com.devsuperior.desafioEventos.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_participante")
-public class Participante {
+@Table(name = "tb_atividade")
+public class Atividade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer id;
     private String nome;
 
-    @Column(unique = true)
-    private String email;
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
+    private Double preco;
 
-    public Participante() {
+    @ManyToMany
+    @JoinTable(name = "tb_participante_atividade",
+        joinColumns = @JoinColumn(name = "atividade_id"),
+        inverseJoinColumns = @JoinColumn(name = "participante_id"))
+    private Set<Participante> participantes = new HashSet<>();
+
+    public Atividade() {
     }
 
-    public Participante(Integer id, String nome, String email) {
+    public Atividade(Integer id, String nome, String descricao, Double preco) {
         this.id = id;
         this.nome = nome;
-        this.email = email;
+        this.descricao = descricao;
+        this.preco = preco;
     }
 
     public Integer getId() {
@@ -36,8 +50,12 @@ public class Participante {
         return nome;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Double getPreco() {
+        return preco;
     }
 
     public void setId(Integer id) {
@@ -48,8 +66,12 @@ public class Participante {
         this.nome = nome;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
     }
 
     @Override
@@ -68,7 +90,7 @@ public class Participante {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Participante other = (Participante) obj;
+        Atividade other = (Atividade) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -77,5 +99,4 @@ public class Participante {
         return true;
     }
 
-    
 }
